@@ -10,6 +10,7 @@ export async function GET() {
         return new Response(JSON.stringify(json), { status: 200 });
     } catch (error) {
         return new Response('Failed to read count data', { status: 500 });
+        console.log(error);
     }
 }
 
@@ -26,5 +27,6 @@ export async function POST(request: Request) {
         return new Response('Count updated successfully', { status: 200 });
     } catch (error) {
         return new Response('Failed to update count', { status: 500 });
+        console.log(error);
     }
 }
