@@ -1,58 +1,61 @@
 "use client";
-import { useState, useEffect } from "react";
-import { MouseEvent } from "react"; // Import MouseEvent type
+import { useState } from "react";
+import Home from "@/components/home";
+import About from "@/components/about";
+import { LoginForm } from "@/components/login-form";
 
-export default function Home() {
-  const [count, setCount] = useState(0);
-  const [buttonText, setButtonText] = useState("Click To Support Us");
+function App() {
+  const [activePage, setActivePage] = useState("Home");
 
-  useEffect(() => {
-    const fetchCount = async () => {
-      const response = await fetch("/api/count");
-      if (response.ok) {
-        const data = await response.json();
-        setCount(data.count);
-      }
-    };
-
-    fetchCount();
-  }, []);
-
-  // Add proper type for the event parameter
-  const handleClick = async (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    if (buttonText === "Click To Support Us") {
-      const newCount = count + 1;
-
-      setCount(newCount);
-      setButtonText("Thank You For Supporting Us");
-
-      await fetch("/api/count", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ count: newCount }),
-      });
+  function renderPage() {
+    switch (activePage) {
+      case "Home":
+        return <Home />;
+      case "About":
+        return <About />;
+      case "Login":
+        return <LoginForm />;
+      default:
+        return <Home />;
     }
-  };
+  }
 
   return (
-    <div className="flex flex-col justify-center items-center bg-gray-950 text-white h-screen border border-gray-800 rounded-lg p-10">
-      <h1 className="text-4xl font-semibold mb-6">Project Ongoing</h1>
+    <div className="bg-slate-900 h-screen flex flex-col text-white">
+      {/* Navbar */}
+      <nav className="bg-slate-800 flex items-middle px-5 h-20">
+        <div className="flex space-x-4">
+          <button
+            onClick={() => setActivePage("Home")}
+            className={`${
+              activePage === "Home" ? "text-blue-400" : "text-white"
+            } hover:text-blue-400`}
+          >
+            Home
+          </button>
+          <button
+            onClick={() => setActivePage("About")}
+            className={`${
+              activePage === "About" ? "text-blue-400" : "text-white"
+            } hover:text-blue-400`}
+          >
+            About
+          </button>
+          <button
+            onClick={() => setActivePage("Login")}
+            className={`${
+              activePage === "Login" ? "text-blue-400" : "text-white"
+            } hover:text-blue-400`}
+          >
+            Login
+          </button>
+        </div>
+      </nav>
 
-      <div className="text-center w-1/2 text-2xl flex items-center justify-center space-x-4 mb-8">
-        <p className="font-bold text-lg">Count:</p>
-        <p className="text-4xl">{count}</p>
-      </div>
-
-      <button
-        onClick={handleClick}
-        className="bg-blue-600 hover:bg-blue-700 text-xl px-6 py-3 rounded-lg transition-all duration-200 transform hover:scale-105"
-      >
-        {buttonText}
-      </button>
+      {/* Content */}
+      <div className="flex-grow">{renderPage()}</div>
     </div>
   );
 }
+
+export default App;
